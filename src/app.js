@@ -13,17 +13,19 @@ const PAGES_DIR = `/content`;
  * @param {string} fileURI  - path to the markdown file
  * @returns {string} - our page HTML
  */
-function parsePage(fileURI) {
+function parsePage(fileURI, stylesURI) {
   const template = fs.readFileSync(
     path.join(__dirname) + TEMPLATE_PATH,
     "utf8"
   );
 
   const pageFile = fs.readFileSync(fileURI, "utf8");
+  const styles = fs.readFileSync(stylesURI, "utf8");
 
   const renderedPage = converter.makeHtml(pageFile);
 
   const html = mustache.render(template, {
+    styles,
     content: renderedPage,
   });
 
@@ -43,6 +45,7 @@ app.get("/:path*", (req, res) => {
     __dirname,
     `${PAGES_DIR}/${req.params.path}${req.params[0]}/index.md`
   );
+  const stylesURI = path.join(__dirname, `public/style.css`);
 
   // Check if the file exists and return a 404 if it doesn't
   if (!fs.existsSync(fileURI)) {
@@ -60,7 +63,7 @@ app.get("/:path*", (req, res) => {
   };
 
   // Parse the markdown file and inject it into the template and return
-  res.send(parsePage(fileURI), options, (err) => {
+  res.send(parsePage(fileURI, stylesURI), options, (err) => {
     if (err) {
       console.log(err);
     }
