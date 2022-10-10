@@ -1,6 +1,9 @@
 # ACME Blog MVP
 
 ## Get started 
+
+Node version: 16.17.1
+
 Install dependencies:
 
 `npm install`
