@@ -37,6 +37,16 @@ const app = express();
 app.use(express.static("src/public"));
 
 /**
+ * Homepage route
+ */
+app.get("/", (req, res) => {
+  const stylesURI = path.join(__dirname, `public/style.css`);
+  const fileURI = path.join(__dirname, `${PAGES_DIR}/index.md`);
+
+  res.send(parsePage(fileURI, stylesURI));
+});
+
+/**
  * Match all routes
  */
 app.get("/:path*", (req, res) => {
